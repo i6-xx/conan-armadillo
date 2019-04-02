@@ -1,11 +1,14 @@
 from conans import ConanFile, CMake, tools
+from conans.tools import download, unzip
+import os,shutil
+from distutils.dir_util import copy_tree
 
 
 class FelixarmadilloConan(ConanFile):
-    name = "Armadillo"
-    version = "9.200.1"
+    name = "armadillo"
+    version = "9.300.2"
     license = "Apache License 2.0"
-    url = "https://github.com/felix-org/armadillo-code"
+    url = "https://github.com/i6-xx/armadillo-code"
     description = "Armadillo C++ linear algebra (matrix) library"
     settings = "cppstd", "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False]}
@@ -14,8 +17,15 @@ class FelixarmadilloConan(ConanFile):
     generators = "cmake"
 
     def source(self):
-        git = tools.Git()
-        git.clone("https://github.com/felix-org/armadillo-code.git", "9.200.1")
+       
+        tar = "http://sourceforge.net/projects/arma/files/{}-{}.tar.xz".format(self.name,self.version)
+        tools.get(tar)
+        os.chdir('{}-{}'.format(self.name,self.version))
+        copy_tree(".", "..")
+        os.chdir('..')
+        shutil.rmtree('{}-{}'.format(self.name,self.version))
+
+        
 
     def build(self):
         tools.replace_in_file(file_path="include/armadillo_bits/config.hpp",
