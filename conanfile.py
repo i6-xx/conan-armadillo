@@ -15,6 +15,7 @@ class FelixarmadilloConan(ConanFile):
     default_options = "shared=False"
     build_policy = "missing"
     generators = "cmake"
+    source_subfolder = "."
 
     def source(self):
        
@@ -40,6 +41,8 @@ class FelixarmadilloConan(ConanFile):
         cmake.build()
 
     def package(self):
+        self.copy("NOTICE.txt", dst='licenses', src=self.source_subfolder)
+        self.copy("LICENSE.*", dst='licenses', src=self.source_subfolder)
         self.copy("armadillo", dst="include", src="include")
         self.copy("*.hpp", dst="include/armadillo_bits", src="include/armadillo_bits")
         self.copy("*armadillo.dll", dst="bin", keep_path=False)
